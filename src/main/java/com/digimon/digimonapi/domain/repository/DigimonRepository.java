@@ -13,6 +13,6 @@ public interface DigimonRepository extends JpaRepository<Digimon, Long> {
 
     List<Digimon> findByNameContaining(String name);
 
-    List<Digimon> findByLevel(String level);
+    List<Digimon> findByLevelContaining(String level);
 
 }
