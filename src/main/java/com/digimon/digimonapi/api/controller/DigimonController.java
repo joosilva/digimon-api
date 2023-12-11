@@ -1,21 +1,21 @@
 package com.digimon.digimonapi.api.controller;
 
+import com.digimon.digimonapi.api.dto.DigimonDTO;
 import com.digimon.digimonapi.api.dto.DigimonInputDTO;
-import com.digimon.digimonapi.api.dto.DigimonList;
+import com.digimon.digimonapi.domain.exception.NoFoundException;
 import com.digimon.digimonapi.domain.model.Digimon;
 import com.digimon.digimonapi.domain.repository.DigimonRepository;
 import com.digimon.digimonapi.domain.service.DigimonService;
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/digimons")
@@ -34,28 +34,66 @@ public class DigimonController {
         return modelMapper.map(digimonInput, Digimon.class);
     }
 
-//    @GetMapping
-//    public void importarDigimons () {
-//        String uri = "https://digimon-api.vercel.app/api/digimon";
-//
-//        RestTemplate restTemplate = new RestTemplate();
-//        ResponseEntity<DigimonList> digimons =  restTemplate.getForEntity(uri, DigimonList.class);
-//
-//
-//
-//        System.out.println();
-//    }
+    private DigimonDTO toMap(Digimon digimon) {
+        return modelMapper.map(digimon, DigimonDTO.class);
+    }
+
+    private List<DigimonDTO> toMapList(List<Digimon> digimons) {
+        return digimons.stream().map(digimon -> toMap(digimon)).collect(Collectors.toList());
+    }
+/*
+   @GetMapping
+   public void importarDigimons () {
+       String uri = "https://digimon-api.vercel.app/api/digimon";
+
+       RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<DigimonList> digimons =  restTemplate.getForEntity(uri, DigimonList.class);
+
+
+
+        System.out.println();
+
+        LINK DA API EXTERNA: https://digimon-api.vercel.app/api/digimon
+    }
+
+*/
 
     @GetMapping
-    public List<Digimon> listarDigimons() {
-        return digimonRepository.findAll();
+    public List<DigimonDTO> listarDigimons() {
+
+        return toMapList(digimonRepository.findAll());
+    }
+
+    @GetMapping("{name}")
+    public DigimonDTO listarDigimonByName(@PathVariable String name) {
+
+        return toMap(digimonRepository.findByName(name));
+    }
+
+    @GetMapping("{level}")
+    public List<DigimonDTO> listarDigimonByLevel(@PathVariable String level) {
+
+        return toMapList(digimonRepository.findByLevel(level));
     }
 
     @PostMapping
-    public Digimon criarDigimon(DigimonInputDTO digimonInput) {
-       Digimon digimon = toEntity(digimonInput);
+    @ResponseStatus(HttpStatus.CREATED)
+    public DigimonDTO criarDigimon(DigimonInputDTO digimonInput) {
+        Digimon digimon = toEntity(digimonInput);
 
-       return digimon;
+        return digimonService.save(digimon);
+    }
+
+    @PutMapping("{id}")
+    public ResponseEntity<DigimonDTO> atualizarDigimon(@Valid @PathVariable Long id, @RequestBody Digimon digimon) {
+
+        return digimonService.atualizar(id, digimon);
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> deletarDigimon(@PathVariable Long id) {
+
+        return digimonService.delete(id);
     }
 
 }
