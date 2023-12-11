@@ -1,7 +1,6 @@
 package com.digimon.digimonapi.domain.service;
 
 import com.digimon.digimonapi.api.dto.DigimonDTO;
-import com.digimon.digimonapi.api.dto.DigimonInputDTO;
 import com.digimon.digimonapi.domain.exception.AlreadyExistsException;
 import com.digimon.digimonapi.domain.exception.NoFoundException;
 import com.digimon.digimonapi.domain.model.Digimon;
@@ -23,16 +22,12 @@ public class DigimonService {
     @Autowired
     private ModelMapper modelMapper;
 
-    private Digimon toEntity(DigimonInputDTO digimonInput) {
-        return modelMapper.map(digimonInput, Digimon.class);
-    }
-
     private DigimonDTO toMap(Digimon digimon) {
         return modelMapper.map(digimon, DigimonDTO.class);
     }
 
     private List<DigimonDTO> toMapList(List<Digimon> digimons) {
-        return digimons.stream().map(digimon -> toMap(digimon)).collect(Collectors.toList());
+        return digimons.stream().map(this::toMap).collect(Collectors.toList());
     }
 
     public List<DigimonDTO> listarDigimons() {
