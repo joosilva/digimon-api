@@ -1,4 +1,4 @@
-package com.digimon.digimonapi.api.dto.feign;
+package com.digimon.digimonapi.api.controller.feign;
 
 import com.digimon.digimonapi.api.dto.DigimonInputDTO;
 import org.springframework.cloud.openfeign.FeignClient;
