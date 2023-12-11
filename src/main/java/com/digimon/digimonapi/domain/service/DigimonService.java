@@ -1,6 +1,7 @@
 package com.digimon.digimonapi.domain.service;
 
 import com.digimon.digimonapi.api.dto.DigimonDTO;
+import com.digimon.digimonapi.api.dto.DigimonInputDTO;
 import com.digimon.digimonapi.domain.exception.AlreadyExistsException;
 import com.digimon.digimonapi.domain.model.Digimon;
 import com.digimon.digimonapi.domain.repository.DigimonRepository;

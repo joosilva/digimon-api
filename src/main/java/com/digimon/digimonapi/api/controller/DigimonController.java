@@ -41,22 +41,6 @@ public class DigimonController {
     private List<DigimonDTO> toMapList(List<Digimon> digimons) {
         return digimons.stream().map(digimon -> toMap(digimon)).collect(Collectors.toList());
     }
-/*
-   @GetMapping
-   public void importarDigimons () {
-       String uri = "https://digimon-api.vercel.app/api/digimon";
-
-       RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<DigimonList> digimons =  restTemplate.getForEntity(uri, DigimonList.class);
-
-
-
-        System.out.println();
-
-        LINK DA API EXTERNA: https://digimon-api.vercel.app/api/digimon
-    }
-
-*/
 
     @GetMapping
     public List<DigimonDTO> listarDigimons() {
@@ -78,8 +62,8 @@ public class DigimonController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public DigimonDTO criarDigimon(DigimonInputDTO digimonInput) {
-        Digimon digimon = toEntity(digimonInput);
+    public DigimonDTO criarDigimon(DigimonInputDTO digimonInputDTO) {
+        Digimon digimon = toEntity(digimonInputDTO);
 
         return digimonService.save(digimon);
     }

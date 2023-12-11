@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class DigimonDTO {
 
-    private String nome;
+    private String name;
     private String img;
     private String level;
 
